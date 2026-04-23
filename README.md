@@ -24,7 +24,7 @@
 This system answers three questions for any US domestic flight:
 
 1. **Will it be delayed?** — Binary classification (AUC 0.8629)
-2. **By how many minutes?** — Regression (MAE 17.58 min)
+2. **By how many minutes?** — Regression (MAE 16.82 min)
 3. **Why?** — SHAP TreeExplainer with per-flight explanations
 
 ---
@@ -36,7 +36,7 @@ This system answers three questions for any US domestic flight:
 | Classifier AUC | 0.8629 |
 | Precision @ threshold 0.65 | 71.9% |
 | Recall @ threshold 0.65 | 61.6% |
-| Regression MAE | 17.58 minutes |
+| Regression MAE | 16.82 minutes |
 | ±15 min accuracy | 69.1% |
 | ±30 min accuracy | 88.3% |
 | Annualized savings | $2.78 billion |
