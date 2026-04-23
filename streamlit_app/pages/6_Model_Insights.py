@@ -72,7 +72,7 @@ with tab2:
     st.markdown("---")
     st.subheader("Regression Model")
     col4, col5, col6 = st.columns(3)
-    col4.metric("MAE", "17.58 min")
+    col4.metric("MAE", "16.82 min")
     col5.metric("±15 min Accuracy", "69.1%")
     col6.metric("±30 min Accuracy", "88.3%")
 
