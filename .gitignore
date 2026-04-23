@@ -1,0 +1,27 @@
+# Large data files
+dataset/*.parquet
+dataset/2023/
+dataset/2024/
+dataset/2025/
+dataset/airports/
+dataset/financials/
+dataset/weather/
+
+# Large model files
+models/*.pkl
+models/*.npy
+models/*.parquet
+
+# Keep these (small, needed)
+!models/feature_list_final.txt
+!models/model_final_metadata.json
+!models/route_risk_scores.parquet
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Environment
+.env
+*.env

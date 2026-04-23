@@ -1,0 +1,40 @@
+{
+  "auc": 0.8629039338877125,
+  "features": 61,
+  "best_iteration": 7162,
+  "train_rows": 13708670,
+  "test_rows": 4519126,
+  "categorical_features": [
+    "OP_UNIQUE_CARRIER",
+    "ORIGIN",
+    "DEST",
+    "airline_cluster_label"
+  ],
+  "new_features": [
+    "origin_pressure_delta_3h",
+    "dest_pressure_delta_3h",
+    "origin_wind_speed_delta_3h",
+    "dest_wind_speed_delta_3h",
+    "day_of_year",
+    "origin_dep_delay_rate_1h",
+    "dest_dep_delay_rate_1h",
+    "origin_stress_index",
+    "real_time_turn_gap",
+    "tail_delays_today",
+    "tail_active_hours",
+    "origin_pressure_drop_stress",
+    "airport_fatigue_index"
+  ],
+  "params": {
+    "learning_rate": 0.009811877112556893,
+    "num_leaves": 312,
+    "max_depth": 13,
+    "min_child_samples": 278,
+    "subsample": 0.722267800117643,
+    "colsample_bytree": 0.5308228457271158,
+    "reg_alpha": 0.16398261731969382,
+    "reg_lambda": 3.406904427387338,
+    "min_split_gain": 0.9742015244622154,
+    "max_bin": 175
+  }
+}
