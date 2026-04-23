@@ -341,7 +341,7 @@ flight-delay-intelligence-platform/
 Built by **Harshith Nerlikere Ramesh** — Data Science student at UMass Dartmouth.
 
 - GitHub: [@HarshithNR02](github.com/HarshithNR02)
-- LinkedIn: (linkedin.com/in/harshithnr2002)
+- LinkedIn: [@Harshith Nerlikere Ramesh](linkedin.com/in/harshithnr2002)
 
 ---
 
