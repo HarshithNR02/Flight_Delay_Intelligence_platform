@@ -338,12 +338,10 @@ flight-delay-intelligence-platform/
 
 ## About
 
-Built by **Harshith** — Data Science student at UMass Dartmouth.
+Built by **Harshith Nerlikere Ramesh** — Data Science student at UMass Dartmouth.
 
-Targeting roles at Spotify, DoorDash, Shopify, Expedia.
-
-- GitHub: [@HarshithNR02](https://github.com/HarshithNR02)
-- LinkedIn: [your linkedin url]
+- GitHub: [@HarshithNR02](github.com/HarshithNR02)
+- LinkedIn: (linkedin.com/in/harshithnr2002)
 
 ---
 
