@@ -112,7 +112,7 @@ Standard LightGBM feature importance ranked ORIGIN and DEST as the top 2 predict
          │                           │
          ▼                           ▼
 ┌─────────────────────────────────────────────────────────┐
-│                  AWS EC2 (Docker)                        │
+│           Azure Container Instances (Docker)             │
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -246,8 +246,8 @@ Full API docs at `http://your-api-url/docs`
 
 ```bash
 # Clone repo
-git clone https://github.com/HarshithNR02/flight-delay-intelligence-platform.git
-cd flight-delay-intelligence-platform
+git clone https://github.com/HarshithNR02/Flight_Delay_Intelligence_platform.git
+cd Flight_Delay_Intelligence_platform
 
 # Create conda environment
 conda create -n flight-delay python=3.11
@@ -274,26 +274,26 @@ uvicorn api.main:app --reload
 
 ```
 flight-delay-intelligence-platform/
-├── notebooks/
-│   ├── 01a_prep_flights.ipynb
-│   ├── 01b_prep_airports.ipynb
-│   ├── 01c_prep_weather.ipynb
-│   ├── 01d_prep_financials.ipynb
-│   ├── 02_clean_flights.ipynb
-│   ├── 03_eda.ipynb
-│   ├── 04_master_merge.ipynb
-│   ├── 05_eda_and_feature_engineering_v1.ipynb
-│   ├── 06_clustering.ipynb
-│   ├── 07a_feature_engineering_v2.ipynb
-│   ├── 07b_feature_engineering_v3.ipynb
-│   ├── 08_classifier_optuna_tuning.ipynb
-│   ├── 09_feature_engineering_v4_and_classifier_model_training.ipynb
-│   ├── 10_regressor_optuna_training.ipynb
-│   ├── 11_regressor_model_training.ipynb
-│   ├── 12_shap.ipynb
-│   ├── 13_cost_benefit.ipynb
-│   ├── 14_cascade_analysis.ipynb
-│   └── 15_route_risk.ipynb
+├── 01a_prep_flights.ipynb
+├── 01b_prep_airports.ipynb
+├── 01c_prep_weather.ipynb
+├── 01d_prep_financials.ipynb
+├── 02_clean_flights.ipynb
+├── 03_eda.ipynb
+├── 04_master_merge.ipynb
+├── 05_eda_and_feature_engineering_v1.ipynb
+├── 06_clustering.ipynb
+├── 07a_feature_engineering_v2.ipynb
+├── 07b_feature_engineering_v3.ipynb
+├── 08_classifier_optuna_tuning.ipynb
+├── 09_feature_engineering_v4_and_classifier_model_training.ipynb
+├── 10_regressor_optuna_training.ipynb
+├── 11_regressor_model_training.ipynb
+├── 12_shap.ipynb
+├── 13_cost_benefit.ipynb
+├── 14_cascade_delay_analysis.ipynb
+├── 15_route_risk_score.ipynb
+├── 16_delay_unpredictability_proof.ipynb
 ├── streamlit_app/
 │   ├── app.py
 │   └── pages/
@@ -331,7 +331,7 @@ flight-delay-intelligence-platform/
 | Data | Pandas, NumPy, PyArrow |
 | Visualization | Plotly, Streamlit |
 | API | FastAPI, Uvicorn |
-| Deployment | Docker, AWS EC2 |
+| Deployment | Docker, Azure Container Instances |
 | Language | Python 3.11 |
 
 ---
