@@ -12,6 +12,10 @@ st.set_page_config(page_title="Flight Delay Predictor", layout="wide")
 st.title("✈️ Flight Delay Predictor")
 st.markdown("Search for a real flight from Jan–Aug 2025 and get the model's prediction with explanation.")
 
+# Load features first
+with open(os.path.join(PROJECT_ROOT, 'models/feature_list_final.txt')) as f:
+    FEATURES = f.read().strip().split('\n')
+
 @st.cache_resource
 def load_models():
     clf = joblib.load(os.path.join(PROJECT_ROOT, 'models/lgbm_delay_classifier_final.pkl'))
@@ -21,15 +25,21 @@ def load_models():
 
 @st.cache_data
 def load_test_data():
-    df = pd.read_parquet(os.path.join(PROJECT_ROOT, 'dataset/merged_flights_fe_v2.parquet'))
+    extra_cols = ['FL_DATE', 'ARR_DEL15', 'ARR_DELAY', 'DEP_HOUR', 'ARR_HOUR',
+                  'prev_tail_arr_delay', 'real_time_turn_gap',
+                  'inbound_arr_delay_3h', 'dest_inbound_arr_delay_3h',
+                  'airport_fatigue_index', 'scheduled_turnaround_buffer',
+                  'CARRIER_DELAY', 'WEATHER_DELAY', 'NAS_DELAY', 'LATE_AIRCRAFT_DELAY']
+    cols = list(set(FEATURES + extra_cols))
+    df = pd.read_parquet(
+        os.path.join(PROJECT_ROOT, 'dataset/merged_flights_fe_v2.parquet'),
+        columns=cols
+    )
     df['FL_DATE'] = pd.to_datetime(df['FL_DATE'])
     test = df[df['FL_DATE'] >= '2025-01-01'].copy()
     for col in ['OP_UNIQUE_CARRIER', 'ORIGIN', 'DEST', 'airline_cluster_label']:
         test[col] = test[col].astype('category')
     return test
-
-with open(os.path.join(PROJECT_ROOT, 'models/feature_list_final.txt')) as f:
-    FEATURES = f.read().strip().split('\n')
 
 clf, reg, explainer = load_models()
 

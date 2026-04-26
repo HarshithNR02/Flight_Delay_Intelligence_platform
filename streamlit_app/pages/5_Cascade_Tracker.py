@@ -13,13 +13,9 @@ st.markdown("Trace how delays propagate through aircraft tail numbers throughout
 
 @st.cache_data
 def load_cascade_data():
-    df = pd.read_parquet(os.path.join(PROJECT_ROOT, 'dataset/merged_flights_fe_v2.parquet'),
-        columns=['FL_DATE','TAIL_NUM','OP_UNIQUE_CARRIER','ORIGIN','DEST',
-                 'DEP_HOUR','ARR_HOUR','ARR_DEL15','ARR_DELAY',
-                 'cascade_score','cascade_delay_minutes','real_time_turn_gap',
-                 'prev_tail_arr_delay','scheduled_turnaround_buffer'])
+    df = pd.read_parquet(os.path.join(PROJECT_ROOT, 'models/cascade_tail_lookup.parquet'))
     df['FL_DATE'] = pd.to_datetime(df['FL_DATE'])
-    return df[df['FL_DATE'] >= '2025-01-01']
+    return df
 
 test = load_cascade_data()
 

@@ -1,12 +1,10 @@
 # --- Core Data Science ---
 pandas==2.2.3
 numpy==1.26.4
-scipy==1.14.1
 pyarrow==18.1.0
 
 # --- ML / Modeling ---
 lightgbm==4.5.0
-catboost==1.2.7
 scikit-learn==1.6.1
 optuna==4.1.0
 optuna-integration[lightgbm]==4.1.0
@@ -21,28 +19,12 @@ plotly==5.24.1
 fastapi==0.115.6
 uvicorn==0.34.0
 pydantic==2.10.4
-httpx==0.28.1
 
 # --- Streamlit App ---
 streamlit==1.41.1
-streamlit-plotly-events==0.0.6
-
-# --- Experiment Tracking ---
-mlflow==2.19.0
-
-# --- Docker / Serving ---
-gunicorn==23.0.0
 
 # --- Utilities ---
 joblib==1.4.2
 tqdm==4.67.1
 python-dotenv==1.0.1
 ipykernel==6.29.5
-ipywidgets==8.1.5
-nbformat==5.10.4
-
-# --- Network Analysis (Step 18) ---
-networkx==3.4.2
-
-# --- Forecasting (Step 20) ---
-prophet==1.1.6

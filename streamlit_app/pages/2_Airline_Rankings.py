@@ -11,22 +11,9 @@ st.title("🏢 Airline Rankings")
 
 @st.cache_data
 def load_carrier_data():
-    df = pd.read_parquet(os.path.join(PROJECT_ROOT, 'dataset/merged_flights_fe_v2.parquet'),
-        columns=['FL_DATE', 'OP_UNIQUE_CARRIER', 'ARR_DEL15', 'ARR_DELAY',
-                 'cascade_score', 'cascade_delay_minutes', 'airline_cluster_label'])
-    df['FL_DATE'] = pd.to_datetime(df['FL_DATE'])
-    return df[df['FL_DATE'] >= '2025-01-01']
+    return pd.read_parquet(os.path.join(PROJECT_ROOT, 'models/airline_rankings.parquet'))
 
-test = load_carrier_data()
-
-carrier_stats = test.groupby('OP_UNIQUE_CARRIER').agg(
-    flights=('ARR_DEL15', 'count'),
-    delay_rate=('ARR_DEL15', 'mean'),
-    avg_delay=('ARR_DELAY', 'mean'),
-    severe_pct=('ARR_DELAY', lambda x: (x > 60).mean()),
-    avg_cascade=('cascade_delay_minutes', 'mean'),
-    cluster=('airline_cluster_label', 'first'),
-).reset_index().sort_values('delay_rate', ascending=False)
+carrier_stats = load_carrier_data().sort_values('delay_rate', ascending=False)
 
 auc_map = {'AA':0.8483,'AS':0.8256,'B6':0.8556,'DL':0.8533,'F9':0.8526,
            'G4':0.8690,'HA':0.8654,'MQ':0.8522,'NK':0.8529,'OH':0.8641,

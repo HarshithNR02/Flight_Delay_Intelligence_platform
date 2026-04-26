@@ -6,6 +6,9 @@ dataset/2025/
 dataset/airports/
 dataset/financials/
 dataset/weather/
+dataset/summaries/
+
+
 
 # Large model files
 models/*.pkl
