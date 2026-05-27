@@ -1,5 +1,4 @@
 name: Flight Delay Platform CI
-
 on:
   push:
     branches: [main]
@@ -9,10 +8,11 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          submodules: true
 
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
@@ -80,7 +80,6 @@ jobs:
         run: |
           python - <<'EOF'
           import ast, sys
-
           for filepath in ["api/main.py", "api/predict.py"]:
               with open(filepath) as f:
                   source = f.read()
@@ -96,7 +95,6 @@ jobs:
         run: |
           python - <<'EOF'
           import ast, sys, os
-
           files = [
               "streamlit_app/app.py",
               "streamlit_app/pages/1_Flight_Predictor.py",
@@ -106,7 +104,6 @@ jobs:
               "streamlit_app/pages/5_Cascade_Tracker.py",
               "streamlit_app/pages/6_Model_Insights.py",
           ]
-
           for filepath in files:
               assert os.path.exists(filepath), f"Missing: {filepath}"
               with open(filepath) as f:
@@ -131,7 +128,6 @@ jobs:
       - name: Validate requirements.txt installable
         run: |
           python - <<'EOF'
-          # Verify key packages imported correctly after install
           import lightgbm, shap, pandas, numpy, fastapi, streamlit, joblib, plotly
           print(f"✓ lightgbm {lightgbm.__version__}")
           print(f"✓ shap {shap.__version__}")
