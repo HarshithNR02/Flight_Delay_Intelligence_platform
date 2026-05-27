@@ -123,7 +123,7 @@ jobs:
         run: |
           python - <<'EOF'
           import os
-          for f in ["Dockerfile", "requirements.txt", "download_models.py"]:
+          for f in ["flight-delay-intelligence/Dockerfile", "flight-delay-intelligence/requirements.txt", "flight-delay-intelligence/download_models.py"]:
               assert os.path.exists(f), f"Missing deployment file: {f}"
               print(f"✓ {f} exists")
           EOF
