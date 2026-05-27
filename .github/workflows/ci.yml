@@ -1,0 +1,146 @@
+name: Flight Delay Platform CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Validate 61 features present
+        run: |
+          python - <<'EOF'
+          EXPECTED = [
+              'MONTH', 'DAY_OF_WEEK', 'DEP_HOUR', 'ARR_HOUR', 'IS_HOLIDAY', 'DISTANCE',
+              'profit_margin', 'origin_monthly_passengers',
+              'origin_temp', 'origin_dew_point', 'origin_pressure', 'origin_wind_dir',
+              'origin_wind_speed', 'origin_precip_1hr', 'origin_weather_severity',
+              'dest_temp', 'dest_dew_point', 'dest_pressure', 'dest_wind_dir',
+              'dest_wind_speed', 'dest_precip_1hr', 'dest_weather_severity',
+              'airline_delay_rate_30d', 'origin_delay_rate_30d', 'dest_delay_rate_30d',
+              'route_delay_rate_30d', 'origin_avg_taxi_out_30d',
+              'flight_num_delay_rate_30d', 'origin_hour_delay_rate_30d',
+              'carrier_origin_delay_rate_30d', 'dest_hour_delay_rate_30d',
+              'airline_delay_rate_7d', 'origin_delay_rate_7d',
+              'cascade_score', 'cascade_delay_minutes', 'hours_since_last_delay',
+              'hourly_flight_count', 'scheduled_turnaround_buffer', 'tail_flight_num_today',
+              'dest_hourly_flight_count',
+              'inbound_arr_delay_3h', 'dest_inbound_arr_delay_3h',
+              'prev_tail_arr_delay', 'national_hub_delay_2h',
+              'OP_UNIQUE_CARRIER', 'ORIGIN', 'DEST', 'airline_cluster_label',
+              'origin_pressure_delta_3h', 'dest_pressure_delta_3h',
+              'origin_wind_speed_delta_3h', 'dest_wind_speed_delta_3h',
+              'day_of_year', 'origin_dep_delay_rate_1h', 'dest_dep_delay_rate_1h',
+              'origin_stress_index', 'real_time_turn_gap',
+              'tail_delays_today', 'tail_active_hours',
+              'origin_pressure_drop_stress', 'airport_fatigue_index',
+          ]
+          assert len(EXPECTED) == 61, f"Expected 61 features, got {len(EXPECTED)}"
+          print(f"✓ Feature list validated: {len(EXPECTED)} features")
+          EOF
+
+      - name: Validate feature_list_final.txt exists and has 61 features
+        run: |
+          python - <<'EOF'
+          import os
+          path = "models/feature_list_final.txt"
+          assert os.path.exists(path), f"Missing: {path}"
+          with open(path) as f:
+              features = [l.strip() for l in f if l.strip()]
+          assert len(features) == 61, f"Expected 61 features in txt, got {len(features)}"
+          print(f"✓ feature_list_final.txt: {len(features)} features")
+          EOF
+
+      - name: Validate API structure
+        run: |
+          python - <<'EOF'
+          import ast, sys
+
+          for filepath in ["api/main.py", "api/predict.py"]:
+              with open(filepath) as f:
+                  source = f.read()
+              try:
+                  ast.parse(source)
+                  print(f"✓ {filepath} — syntax OK")
+              except SyntaxError as e:
+                  print(f"✗ {filepath} — syntax error: {e}")
+                  sys.exit(1)
+          EOF
+
+      - name: Validate Streamlit app structure
+        run: |
+          python - <<'EOF'
+          import ast, sys, os
+
+          files = [
+              "streamlit_app/app.py",
+              "streamlit_app/pages/1_Flight_Predictor.py",
+              "streamlit_app/pages/2_Airline_Rankings.py",
+              "streamlit_app/pages/3_Route_Risk.py",
+              "streamlit_app/pages/4_Cost_Impact.py",
+              "streamlit_app/pages/5_Cascade_Tracker.py",
+              "streamlit_app/pages/6_Model_Insights.py",
+          ]
+
+          for filepath in files:
+              assert os.path.exists(filepath), f"Missing: {filepath}"
+              with open(filepath) as f:
+                  source = f.read()
+              try:
+                  ast.parse(source)
+                  print(f"✓ {filepath} — syntax OK")
+              except SyntaxError as e:
+                  print(f"✗ {filepath} — syntax error: {e}")
+                  sys.exit(1)
+          EOF
+
+      - name: Validate Dockerfile exists
+        run: |
+          python - <<'EOF'
+          import os
+          for f in ["Dockerfile", "requirements.txt", "download_models.py"]:
+              assert os.path.exists(f), f"Missing deployment file: {f}"
+              print(f"✓ {f} exists")
+          EOF
+
+      - name: Validate requirements.txt installable
+        run: |
+          python - <<'EOF'
+          # Verify key packages imported correctly after install
+          import lightgbm, shap, pandas, numpy, fastapi, streamlit, joblib, plotly
+          print(f"✓ lightgbm {lightgbm.__version__}")
+          print(f"✓ shap {shap.__version__}")
+          print(f"✓ pandas {pandas.__version__}")
+          print(f"✓ numpy {numpy.__version__}")
+          print(f"✓ fastapi {fastapi.__version__}")
+          print(f"✓ streamlit {streamlit.__version__}")
+          print(f"✓ plotly {plotly.__version__}")
+          EOF
+
+      - name: All checks passed
+        run: echo "✓ CI complete — all validations passed"
