@@ -14,6 +14,8 @@
 
 7-page interactive dashboard: flight predictor with SHAP explanations, airline rankings, route risk scoring, cost-benefit analysis, cascade delay tracker, and model insights.
 
+> **Note:** Hosted on Hugging Face Spaces (free tier) — may take 30–60 seconds to wake up on first visit.
+
 ---
 
 ## What This Project Does
@@ -147,38 +149,38 @@ Conservative 35% proactive savings rate. Published research supports 50%+ with o
 
 ## Architecture
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    Data Sources                          │
-│  BTS On-Time  │  NOAA ISD-Lite  │  Form 41  │  T-100   │
-└───────────────────────┬─────────────────────────────────┘
-                        │
-                        ▼
-┌─────────────────────────────────────────────────────────┐
-│              Data Pipeline (Notebooks 01–08)             │
-│  Prep → Clean → EDA → Merge → Feature Engineering (61)  │
-└───────────────────────┬─────────────────────────────────┘
-                        │
-                        ▼
-┌─────────────────────────────────────────────────────────┐
-│                      Models                              │
-│  K-Means Clustering  │  LightGBM Classifier (AUC 0.86)  │
-│  Optuna Tuning       │  LightGBM Regressor (MAE 16.8)   │
-│  SHAP TreeExplainer  │  Route Risk Scoring               │
-└───────────────────────┬─────────────────────────────────┘
-                        │
-          ┌─────────────┴─────────────┐
-          ▼                           ▼
-┌─────────────────┐         ┌─────────────────┐
-│   FastAPI        │         │   Streamlit      │
-│   /predict       │         │   7-page app     │
-└─────────────────┘         └─────────────────┘
-          │                           │
-          └─────────────┬─────────────┘
-                        ▼
-┌─────────────────────────────────────────────────────────┐
-│      Hugging Face Spaces (Docker) + Azure Blob Storage   │
-└─────────────────────────────────────────────────────────┘
+```text
++----------------------------------------------------------+
+|                    Data Sources                           |
+|  BTS On-Time  |  NOAA ISD-Lite  |  Form 41  |  T-100    |
++------------------------+---------------------------------+
+                         |
+                         v
++----------------------------------------------------------+
+|         Data Pipeline (Notebooks 01-08)                  |
+|  Prep -> Clean -> EDA -> Merge -> Feature Engineering    |
++------------------------+---------------------------------+
+                         |
+                         v
++----------------------------------------------------------+
+|                      Models                              |
+|  K-Means Clustering  |  LightGBM Classifier (AUC 0.86)  |
+|  Optuna Tuning       |  LightGBM Regressor (MAE 16.8)   |
+|  SHAP TreeExplainer  |  Route Risk Scoring               |
++------------+-------------------------------------------+
+             |
+     +-------+-------+
+     v               v
++----------+    +------------+
+| FastAPI  |    | Streamlit  |
+| /predict |    | 7-page app |
++----------+    +------------+
+     |               |
+     +-------+-------+
+             v
++----------------------------------------------------------+
+|   Hugging Face Spaces (Docker) + Azure Blob Storage      |
++----------------------------------------------------------+
 ```
 
 ---
@@ -229,42 +231,44 @@ Response:
 }
 ```
 
+> **Note:** API code is in `api/main.py` and `api/predict.py`. The regressor model (806MB, 20,000 trees) is excluded from deployment due to memory constraints on free-tier infrastructure — the classifier and SHAP explanations run in the Hugging Face deployment.
+
 ---
 
 ## Project Structure
 
-```
-├── 01a_prep_flights.ipynb                              # BTS flight data loading
-├── 01b_prep_airports.ipynb                             # BTS T-100 airport traffic
-├── 01c_prep_weather.ipynb                              # NOAA ISD-Lite weather
-├── 01d_prep_financials.ipynb                           # BTS Form 41 financials
-├── 02_clean_flights.ipynb                              # Remove cancelled/diverted
-├── 03_eda.ipynb                                        # Exploratory data analysis
-├── 04_master_merge.ipynb                               # Join all 4 datasets
-├── 05a_feature_engineering_v1_cascade_weather.ipynb     # Cascade, weather severity, rolling rates
-├── 05b_feature_engineering_v2_rolling_rates_turnaround.ipynb  # Flight-level rates, turnaround
-├── 05c_feature_engineering_v3_inbound_tail_hub.ipynb    # Inbound delays, tail history, hub fever
-├── 05d_feature_engineering_v4_weather_deltas_stress.ipynb  # Weather deltas, stress indices
-├── 06_clustering.ipynb                                 # K-Means segmentation
-├── 07_classifier_optuna_tuning.ipynb                   # 50-trial Optuna search
-├── 08_Final_Feature_engineering.ipynb                  # Clean 61-feature pipeline
-├── 09_Final_Classifier_model_training.ipynb                  # Final LightGBM classifier
-├── 10_regressor_optuna_training.ipynb                  # Regressor Optuna search
-├── 11_Final_regressor_model_training.ipynb                   # Final LightGBM regressor
-├── 12_cascade_delay_analysis.ipynb                     # Cascade propagation analysis
-├── 13_shap_analysis.ipynb                              # SHAP explanations
-├── 14_cost_benefit.ipynb                               # $2.78B savings analysis
-├── 15_route_risk_score.ipynb                           # 5,855 routes scored
-├── 16_delay_unpredictability_proof.ipynb               # 58% ceiling proof
-├── streamlit_app/
-│   ├── app.py
-│   └── pages/
-├── api/
-│   ├── main.py
-│   └── predict.py
-├── Dockerfile
-├── requirements.txt
-└── README.md
+```text
+|- 01a_prep_flights.ipynb                         # BTS flight data loading
+|- 01b_prep_airports.ipynb                        # BTS T-100 airport traffic
+|- 01c_prep_weather.ipynb                         # NOAA ISD-Lite weather
+|- 01d_prep_financials.ipynb                      # BTS Form 41 financials
+|- 02_clean_flights.ipynb                         # Remove cancelled/diverted
+|- 03_eda.ipynb                                   # Exploratory data analysis
+|- 04_master_merge.ipynb                          # Join all 4 datasets
+|- 05a_feature_engineering_v1_cascade_weather.ipynb
+|- 05b_feature_engineering_v2_rolling_rates_turnaround.ipynb
+|- 05c_feature_engineering_v3_inbound_tail_hub.ipynb
+|- 05d_feature_engineering_v4_weather_deltas_stress.ipynb
+|- 06_clustering.ipynb                            # K-Means segmentation
+|- 07_classifier_optuna_tuning.ipynb              # 50-trial Optuna search
+|- 08_Final_Feature_engineering.ipynb             # Clean 61-feature pipeline
+|- 09_Final_Classifier_model_training.ipynb       # Final LightGBM classifier
+|- 10_regressor_optuna_training.ipynb             # Regressor Optuna search
+|- 11_Final_regressor_model_training.ipynb        # Final LightGBM regressor
+|- 12_Cascade_delay_analysis.ipynb                # Cascade propagation analysis
+|- 13_shap_analysis.ipynb                         # SHAP explanations
+|- 14_Cost_benefit.ipynb                          # $2.78B savings analysis
+|- 15_route_risk_score.ipynb                      # 5,855 routes scored
+|- 16_delay_unpredictability_proof.ipynb          # 58% ceiling proof
+|- streamlit_app/
+|   |- app.py
+|   +- pages/
+|- api/
+|   |- main.py
+|   +- predict.py
+|- Dockerfile
+|- requirements.txt
++- README.md
 ```
 
 ---
@@ -283,11 +287,19 @@ Response:
 
 ---
 
+## Honest Notes
+
+- **58% unpredictability ceiling** is documented and proven in notebook 16 — not a limitation of the model but a fundamental constraint of public data availability.
+- **Regressor (MAE 16.82 min)** uses 20,000 trees trained to full convergence — no early stopping. Model size (806MB) exceeds free-tier memory constraints; classifier-only deployment used in production.
+- **Cost-benefit figures** use published A4A industry data at conservative 35% intervention rate. Not proprietary estimates.
+
+---
+
 ## How to Run Locally
 
 ```bash
-git clone https://github.com/HarshithNR02/Flight_Delay_Intelligence_platform.git
-cd Flight_Delay_Intelligence_platform
+git clone https://github.com/HarshithNR02/FLIGHT_DELAY_INTELLIGENCE_PLATFORM.git
+cd FLIGHT_DELAY_INTELLIGENCE_PLATFORM
 
 conda create -n flight-delay python=3.11
 conda activate flight-delay
