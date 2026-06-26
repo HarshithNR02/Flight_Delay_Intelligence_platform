@@ -28,3 +28,4 @@ __pycache__/
 # Environment
 .env
 *.env
+.DS_Store
